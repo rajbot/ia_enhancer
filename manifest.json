@@ -1,0 +1,12 @@
+{
+  "name": "IA Enhancer",
+  "version": "1.1",
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      "matches": ["https://archive.org/details/*"],
+      "css": ["ia_enhancer.css"],
+      "js": ["jquery-2.0.2.js", "ia_enhancer.js"]
+    }
+  ]
+}

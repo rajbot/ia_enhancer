@@ -1,0 +1,90 @@
+#ia_enhancer {
+    display:      table;
+    width:        1500px;
+    font-family:  'Helvetica Neue';
+    font-size:    1.1em;
+    /*border:     1px solid red;*/
+}
+
+#title_div {
+    color: #fff;
+    background-color: #000;
+    font-size: 1.5em;
+    padding: 2px;
+}
+
+#avplaycontainer {
+    width:      auto;
+    text-align: center;
+    float:      left;
+    padding:    10px;
+    display:    table-cell;
+    max-width:  640px;
+    /*border:           1px solid green;*/
+}
+
+#meta_div {
+    float:      left;
+    width:      500px;
+    padding:    10px;
+    display:    table-cell;
+    border: 2px solid black;
+}
+
+
+.ia_description {
+    font-size: 1.2em;
+    padding-bottom: 5px;
+}
+
+.meta_row {
+    padding: 4px;
+    font-size: 1.1em;
+}
+
+.meta_row:nth-child(even) {background: #EEE}
+
+.meta_key {
+    width: 100px;
+    float: left;
+    color: #999;
+}
+
+.meta_val {
+    display: inline-block;
+    width: 392px;
+}
+
+
+.dl_group {
+    padding: 10px;
+}
+
+.dl_orig {
+    padding: 2px;
+}
+
+.dl_file {
+    padding: 2px 5px;
+    margin: 5px;
+    background-color: #666;
+    white-space: nowrap;
+}
+
+.ia_original {
+    border: 1px solid #333;
+}
+
+.dl_file:hover {
+    background-color: #888;
+}
+
+.dl_file a:link {
+    text-decoration: none;
+    color: #fff;
+}
+
+.dl_file a:visited {
+    text-decoration: none;
+    color: #eee;
+}

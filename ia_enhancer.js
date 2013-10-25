@@ -178,6 +178,11 @@
 
         var ia_player_div = $('<div id="ia_player_div"/>');
 
+        var mediatype = metadata['mediatype'];
+        if ('audio' == mediatype) {
+            $('#avplaydiv').addClass('ia_audio');
+        }
+
         $('body').empty().append(title_div).append(ia_player_div).append(ia_div);
         ia_player_div.append(av_embed);
         ia_div.append(meta_div);

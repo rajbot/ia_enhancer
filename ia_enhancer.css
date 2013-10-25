@@ -42,6 +42,10 @@
     width: 400px;
 }
 
+#avplaydiv {
+    width: 350px;
+}
+
 #meta_div {
     /*float:      left;*/
     width:      500px;

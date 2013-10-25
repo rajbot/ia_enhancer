@@ -206,7 +206,7 @@
         var metadata  = data['metadata'];
         var files     = data['files'];
         var mediatype = metadata['mediatype'];
-        if ('movies' == mediatype) {
+        if (('movies' == mediatype) || ('audio' == mediatype)){
             draw_movie_page(metadata, files);
         }
     });

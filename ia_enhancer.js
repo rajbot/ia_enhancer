@@ -20,8 +20,8 @@
                             'collectionid', 'contributor', 'curation',
                             'foldoutcount', 'identifier',
                             'identifier-access', 'identifier-ark', 'imagecount', 'lcamid',
-                            'mediatype', 'missingpages', 'ocr', 'operator', 'page-progression',
-                            'pick', 'ppi', 'publicdate', 'rcamid',
+                            'mediatype', 'missingpages', 'numeric_id', 'ocr', 'operator',
+                            'page-progression', 'pick', 'ppi', 'publicdate', 'rcamid',
                             'repub_state', 'scandate', 'scanningcenter',
                             'scanner', 'sponsor', 'sponsordate',
                             'type', 'updatedate', 'updater', 'uploader'];
@@ -126,7 +126,7 @@
                       }
             downloads[original].push(dl);
         });
-        av_div.append('<div>Downloads</div>');
+
         var dl_div = $('<div/>').addClass('ia_downloads');
         av_div.append(dl_div);
 
@@ -173,22 +173,29 @@
         var title = metadata['title'];
         if (undefined == title) title = 'Untitled';
         var ia_div = $('<div id="ia_enhancer"/>');
-        var ia_row = $('<div id="ia_enhancer_row"/>');
         var title_div = $('<div id="title_div"/>').text(title);
         var meta_div = $('<div id="meta_div"></div>');
 
-        $('body').empty().append(title_div).append(ia_div);
-        ia_div.append(av_embed).append(meta_div);
+        var ia_player_div = $('<div id="ia_player_div"/>');
+
+        $('body').empty().append(title_div).append(ia_player_div).append(ia_div);
+        ia_player_div.append(av_embed);
+        ia_div.append(meta_div);
         av_embed.on('resize', '#avplaydiv', function() {alert('resize');});
 
         var description = metadata['description'];
         if (undefined != description) {
             var desc_div = $('<div/>').addClass('ia_description').text(description);
-            meta_div.append(desc_div);
+            //meta_div.append(desc_div);
+            ia_player_div.append(desc_div);
         }
 
         append_metadata(metadata, meta_div);
-        append_files(files, av_embed, metadata['identifier']);
+
+        var files_div = $('<div id="ia_files_div"></div>');
+        ia_div.append(files_div);
+
+        append_files(files, files_div, metadata['identifier']);
     }
 
     //____________________________________________________________________________________

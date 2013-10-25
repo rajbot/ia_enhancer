@@ -35,9 +35,9 @@
 
             if ("object" === typeof(metadata[key])) return true; //for now
 
-            var row_div = $('<div/>').addClass('meta_row');
-            var key_div = $('<div/>').addClass('meta_key').text(key);
-            var val_div = $('<div/>').addClass('meta_val').text(metadata[key]);
+            var row_div = $('<div/>').addClass('ia_meta_row');
+            var key_div = $('<div/>').addClass('ia_meta_key').text(key);
+            var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
             meta_div.append(row_div.append(key_div).append(val_div));
         });
 
@@ -47,9 +47,9 @@
 
             if ("object" === typeof(metadata[key])) return true; //for now
 
-            var row_div = $('<div/>').addClass('meta_row');
-            var key_div = $('<div/>').addClass('meta_key').text(key);
-            var val_div = $('<div/>').addClass('meta_val').text(metadata[key]);
+            var row_div = $('<div/>').addClass('ia_meta_row');
+            var key_div = $('<div/>').addClass('ia_meta_key').text(key);
+            var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
             meta_div.append(row_div.append(key_div).append(val_div));
         });
 
@@ -167,7 +167,7 @@
             collections = [collections];
         }
 
-        $.each(collections, function(i, collection) {
+        $.each(collections.reverse(), function(i, collection) {
             link = $('<a/>').attr('href', '/details/'+collection).text(collection);
             nav_div.append(' &#10095; ').append(link);
         });
@@ -191,10 +191,10 @@
 
         var nav_div = make_nav_div(metadata);
 
-        var title_div = $('<div id="title_div"/>').text(title);
+        var title_div = $('<div id="ia_title_div"/>').text(title);
         var ia_player_div = $('<div id="ia_player_div"/>');
         var ia_div = $('<div id="ia_enhancer"/>');
-        var meta_div = $('<div id="meta_div"></div>');
+        var meta_div = $('<div id="ia_meta_div"></div>');
 
 
         if ('audio' == mediatype) {

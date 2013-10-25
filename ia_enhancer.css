@@ -20,19 +20,18 @@
     text-decoration: underline;
 }
 
-
-
 .ia_logo {
     width: 20px;
     height: 20px;
     vertical-align: middle;
 }
 
-#title_div {
+#ia_title_div {
     color: #fff;
     background-color: #000;
     font-size: 1.5em;
     padding: 2px;
+    margin-bottom: 15px;
 }
 
 #ia_player_div {
@@ -68,7 +67,7 @@
     width: 350px;
 }
 
-#meta_div {
+#ia_meta_div {
     /*float:      left;*/
     width:      500px;
     padding:    10px;
@@ -78,22 +77,22 @@
 
 
 
-.meta_row {
+.ia_meta_row {
     padding: 4px;
     font-size: 1.1em;
 }
 
-.meta_row:nth-child(even) {
+.ia_meta_row:nth-child(even) {
     background: #EEE;
 }
 
-.meta_key {
+.ia_meta_key {
     width: 100px;
     float: left;
     color: #999;
 }
 
-.meta_val {
+.ia_meta_val {
     display: inline-block;
     width: 392px;
 }

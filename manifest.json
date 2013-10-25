@@ -8,5 +8,8 @@
       "css": ["ia_enhancer.css"],
       "js": ["jquery-2.0.2.js", "ia_enhancer.js"]
     }
+  ],
+  "web_accessible_resources": [
+    "logo.png"
   ]
 }

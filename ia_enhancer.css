@@ -6,6 +6,28 @@
     border:     1px solid black;
 }
 
+#ia_nav_div {
+    color: #fff;
+    background-color: #000;
+}
+
+#ia_nav_div a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#ia_nav_div a:hover {
+    text-decoration: underline;
+}
+
+
+
+.ia_logo {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
 #title_div {
     color: #fff;
     background-color: #000;
@@ -42,7 +64,7 @@
     width: 400px;
 }
 
-#avplaydiv {
+#avplaydiv.ia_audio {
     width: 350px;
 }
 

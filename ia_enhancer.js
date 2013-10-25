@@ -1,6 +1,5 @@
 (function() {
     //alert('foo!');
-    console.log($('.key'));
 
     var path = document.location.pathname.split('/');
     if (3 != path.length) {
@@ -15,7 +14,6 @@
     //append_metadata()
     //____________________________________________________________________________________
     function append_metadata(metadata, meta_div) {
-        console.log('append!');
         var system_metadata = ['addeddate', 'call_number', 'camera', 'collection',
                             'collectionid', 'contributor', 'curation',
                             'foldoutcount', 'identifier',
@@ -107,7 +105,6 @@
     function append_files(files, av_div, identifier) {
         var downloads = {};
         $.each(files, function(i, file) {
-            console.log(file);
             if ('Thumbnail' == file.format) return true; //continue
             if ('Metadata'  == file.format) return true; //continue
 
@@ -130,9 +127,6 @@
         var dl_div = $('<div/>').addClass('ia_downloads');
         av_div.append(dl_div);
 
-        console.log('downloads:');
-        console.log(downloads);
-
         append_metafiles(dl_div, files, identifier);
 
         var keys = Object.keys(downloads);
@@ -146,8 +140,6 @@
             dl_group.append(dl_files);
 
             $.each(downloads[key], function(i, file) {
-                console.log('file');
-                console.log(file);
                 var link = $('<a/>').attr('href', '/download/'+identifier + '/' + file.name).text(file.format);
                 var dl_file = $('<span/>').addClass('dl_file').append(link);
                 if ('original' == file.source) {
@@ -159,31 +151,57 @@
 
     }
 
+    // make_nav_div()
+    //____________________________________________________________________________________
+    function make_nav_div(metadata) {
+        var mediatype = metadata['mediatype'];
+        var logo = $('<img/>').attr('src', chrome.extension.getURL('logo.png')).addClass('ia_logo');
+        var link = $('<a href="/">').append(logo);
+        //var nav_str = '<img src="/images/logo.png" class="ia_logo"/></a> &#10095; ->';
+        var nav_div = $('<div id="ia_nav_div"/>').append(link).append(' &#10095; ');
+        link = $('<a/>').attr('href', '/details/'+mediatype).text(mediatype);
+        nav_div.append(link);
+
+        var collections = metadata['collection'];
+        if ("string" == typeof(collections)) {
+            collections = [collections];
+        }
+
+        $.each(collections, function(i, collection) {
+            link = $('<a/>').attr('href', '/details/'+collection).text(collection);
+            nav_div.append(' &#10095; ').append(link);
+        });
+
+        return nav_div;
+    }
+
 
     //draw_movie_page()
     //____________________________________________________________________________________
-    function draw_movie_page(metadata, files) {
-        console.log('drawing movie page');
+    function draw_av_page(metadata, files) {
         var av_embed = $('#avplaycontainer');
         if (0 == av_embed.length) {
             console.log('could not find avplayer!');
             return;
         }
 
+        var mediatype = metadata['mediatype'];
         var title = metadata['title'];
         if (undefined == title) title = 'Untitled';
-        var ia_div = $('<div id="ia_enhancer"/>');
+
+        var nav_div = make_nav_div(metadata);
+
         var title_div = $('<div id="title_div"/>').text(title);
+        var ia_player_div = $('<div id="ia_player_div"/>');
+        var ia_div = $('<div id="ia_enhancer"/>');
         var meta_div = $('<div id="meta_div"></div>');
 
-        var ia_player_div = $('<div id="ia_player_div"/>');
 
-        var mediatype = metadata['mediatype'];
         if ('audio' == mediatype) {
             $('#avplaydiv').addClass('ia_audio');
         }
 
-        $('body').empty().append(title_div).append(ia_player_div).append(ia_div);
+        $('body').empty().append(nav_div).append(title_div).append(ia_player_div).append(ia_div);
         ia_player_div.append(av_embed);
         ia_div.append(meta_div);
         av_embed.on('resize', '#avplaydiv', function() {alert('resize');});
@@ -205,14 +223,13 @@
 
     //____________________________________________________________________________________
     $.get('/metadata/'+identifier, function(data) {
-        console.log('got:'); console.log(data);
         //$('body').empty();
 
         var metadata  = data['metadata'];
         var files     = data['files'];
         var mediatype = metadata['mediatype'];
         if (('movies' == mediatype) || ('audio' == mediatype)){
-            draw_movie_page(metadata, files);
+            draw_av_page(metadata, files);
         }
     });
 })();

@@ -176,7 +176,7 @@
     }
 
 
-    //draw_movie_page()
+    //draw_av_page()
     //____________________________________________________________________________________
     function draw_av_page(metadata, files) {
         var av_embed = $('#avplaycontainer');

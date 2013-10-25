@@ -9,6 +9,7 @@
 #ia_nav_div {
     color: #fff;
     background-color: #000;
+    padding-bottom: 2px;
 }
 
 #ia_nav_div a {
@@ -43,7 +44,7 @@
     padding-bottom: 5px;
     display: table-cell;
     vertical-align: top;
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
 }
 
 #avplaycontainer {

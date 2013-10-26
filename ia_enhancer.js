@@ -13,7 +13,7 @@
 
     //append_metadata()
     //____________________________________________________________________________________
-    function append_metadata(metadata, meta_div) {
+    function append_metadata(metadata, meta_div, can_edit) {
         var system_metadata = ['addeddate', 'call_number', 'camera', 'collection',
                             'collectionid', 'contributor', 'curation',
                             'foldoutcount', 'identifier',
@@ -72,12 +72,18 @@
 
     // append_metafiles()
     //____________________________________________________________________________________
-    function append_metafiles(av_div, files, identifier) {
+    function append_metafiles(av_div, files, identifier, can_edit) {
         var dl_group = $('<div/>').addClass('dl_group');
         av_div.append(dl_group);
         dl_group.append($('<div/>').addClass('dl_orig').text('Metadata'));
         var dl_files = $('<div/>').addClass('dl_files');
         dl_group.append(dl_files);
+
+        if (can_edit) {
+            var link = $('<a/>').attr('href', '/history/'+identifier).text('History');
+            dl_files.append($('<span/>').addClass('dl_file').append(link));
+        }
+
         $.each(files, function(i, file) {
             if ('Metadata'  == file.format) {
                 var type;
@@ -102,7 +108,7 @@
 
     // append_files()
     //____________________________________________________________________________________
-    function append_files(files, av_div, identifier) {
+    function append_files(files, av_div, identifier, can_edit) {
         var downloads = {};
         $.each(files, function(i, file) {
             if ('Thumbnail' == file.format) return true; //continue
@@ -127,7 +133,7 @@
         var dl_div = $('<div/>').addClass('ia_downloads');
         av_div.append(dl_div);
 
-        append_metafiles(dl_div, files, identifier);
+        append_metafiles(dl_div, files, identifier, can_edit);
 
         var keys = Object.keys(downloads);
         keys.sort();
@@ -178,7 +184,7 @@
 
     //draw_av_page()
     //____________________________________________________________________________________
-    function draw_av_page(metadata, files) {
+    function draw_av_page(metadata, files, can_edit) {
         var av_embed = $('#avplaycontainer');
         if (0 == av_embed.length) {
             console.log('could not find avplayer!');
@@ -208,17 +214,17 @@
 
         var description = metadata['description'];
         if (undefined != description) {
-            var desc_div = $('<div/>').addClass('ia_description').text(description);
+            var desc_div = $('<div/>').addClass('ia_description').html(description);
             //meta_div.append(desc_div);
             ia_player_div.append(desc_div);
         }
 
-        append_metadata(metadata, meta_div);
+        append_metadata(metadata, meta_div, can_edit);
 
         var files_div = $('<div id="ia_files_div"></div>');
         ia_div.append(files_div);
 
-        append_files(files, files_div, metadata['identifier']);
+        append_files(files, files_div, metadata['identifier'], can_edit);
     }
 
     //____________________________________________________________________________________
@@ -228,8 +234,14 @@
         var metadata  = data['metadata'];
         var files     = data['files'];
         var mediatype = metadata['mediatype'];
+
+        var can_edit = false;
+        if (1 == $('a.level3Header').filter(':contains("Edit Item!")').length) {
+            can_edit = true;
+        }
+
         if (('movies' == mediatype) || ('audio' == mediatype)){
-            draw_av_page(metadata, files);
+            draw_av_page(metadata, files, can_edit);
         }
     });
 })();

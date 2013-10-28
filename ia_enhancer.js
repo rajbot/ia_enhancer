@@ -187,6 +187,25 @@
     }
 
 
+    // make_book_div()
+    //____________________________________________________________________________________
+    function make_book_div(metadata) {
+        var identifier = metadata['identifier'];
+        var book_div = $('<div id="ia_book"/>');
+        var embed_div = $("<iframe id='bookreader_embed' onload='$(\"#bookreader_embed\")[0].contentWindow.jQuery(\"#BRnavCntlBtm\").click();' src='https://archive.org/stream/"+identifier+"#mode/2up' width='100%' height='430px' frameborder='0' ></iframe>");
+        book_div.append(embed_div);
+
+        var description = metadata['description'];
+        if (undefined != description) {
+            var desc_div = $('<div/>').addClass('ia_book_description').html(description);
+            //meta_div.append(desc_div);
+            book_div.append(desc_div);
+        }
+
+        return book_div;
+    }
+
+
     //draw_av_page()
     //____________________________________________________________________________________
     function draw_av_page(metadata, files, can_edit) {
@@ -241,7 +260,11 @@
         var files_div = make_files_div(files, metadata['identifier'], can_edit);
         ia_div.append(files_div);
 
-        $('body').empty().append(nav_div).append(title_div).append(ia_div);
+        var book_div = make_book_div(metadata);
+
+        $('body').empty().append(nav_div).append(title_div).append(book_div)
+
+        $('body').append(ia_div);
 
 
     }

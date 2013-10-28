@@ -51,6 +51,7 @@
 .ia_book_description {
     font-size: 1.2em;
     padding: 20px;
+    text-align: left;
 }
 
 #avplaycontainer {
@@ -87,6 +88,8 @@
 .ia_meta_row {
     padding: 4px;
     font-size: 1.1em;
+    display: table;
+    width: 100%;
 }
 
 .ia_meta_row:nth-child(even) {
@@ -96,15 +99,15 @@
 .ia_meta_key {
     width: 100px;
     margin-right: 5px;
-    float: left;
+    display: table-cell;
+    /*float: left;*/
     color: #999;
     overflow: scroll;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .ia_meta_val {
-    display: inline-block;
-    width: calc(100% - 105px); /* key width=100px, key padding = 5px */
+    display: table-cell;
     overflow: scroll;
 }
 
@@ -115,10 +118,6 @@
 
 .dl_group {
     padding: 10px;
-}
-
-.dl_group:nth-child(even) {
-    background: #EEE;
 }
 
 .dl_orig {

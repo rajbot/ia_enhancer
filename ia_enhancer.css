@@ -24,7 +24,7 @@
 .ia_logo {
     width: 20px;
     height: 20px;
-    vertical-align: middle;
+    vertical-align: bottom;
 }
 
 #ia_title_div {
@@ -89,13 +89,17 @@
 
 .ia_meta_key {
     width: 100px;
+    margin-right: 5px;
     float: left;
     color: #999;
+    overflow: scroll;
+    white-space: nowrap;
 }
 
 .ia_meta_val {
     display: inline-block;
-    width: 392px;
+    width: calc(100% - 105px); /* key width=100px, key padding = 5px */
+    overflow: scroll;
 }
 
 

@@ -11,9 +11,12 @@
     var identifier = path[2];
     console.log('got id:', identifier)
 
-    //append_metadata()
+
+    //make_meta_div()
     //____________________________________________________________________________________
-    function append_metadata(metadata, meta_div, can_edit) {
+    function make_meta_div(metadata, can_edit) {
+        var meta_div = $('<div id="ia_meta_div"></div>');
+
         var system_metadata = ['addeddate', 'call_number', 'camera', 'collection',
                             'collectionid', 'contributor', 'curation',
                             'foldoutcount', 'identifier',
@@ -53,20 +56,7 @@
             meta_div.append(row_div.append(key_div).append(val_div));
         });
 
-        /*
-
-
-        for (key in metadata) {
-            if ('description' == key) continue;
-            console.log(key);
-            console.log(metadata[key]);
-
-            var row_div = $('<div/>').addClass('meta_row');
-            var key_div = $('<div/>').addClass('meta_key').text(key);
-            var val_div = $('<div/>').addClass('meta_val').text(metadata[key]);
-            meta_div.append(row_div.append(key_div).append(val_div));
-        }
-        */
+        return meta_div;
     }
 
 
@@ -106,9 +96,11 @@
     }
 
 
-    // append_files()
+    // make_files_div()
     //____________________________________________________________________________________
-    function append_files(files, av_div, identifier, can_edit) {
+    function make_files_div(files, identifier, can_edit) {
+        var files_div = $('<div id="ia_files_div"></div>');
+
         var downloads = {};
         $.each(files, function(i, file) {
             if ('Thumbnail' == file.format) return true; //continue
@@ -131,7 +123,7 @@
         });
 
         var dl_div = $('<div/>').addClass('ia_downloads');
-        av_div.append(dl_div);
+        files_div.append(dl_div);
 
         append_metafiles(dl_div, files, identifier, can_edit);
 
@@ -155,7 +147,9 @@
             });
         });
 
+        return files_div;
     }
+
 
     // make_nav_div()
     //____________________________________________________________________________________
@@ -182,6 +176,17 @@
     }
 
 
+    // make_title_div()
+    //____________________________________________________________________________________
+    function make_title_div(metadata) {
+        var title = metadata['title'];
+        if (undefined == title) title = 'Untitled';
+
+        var title_div = $('<div id="ia_title_div"/>').text(title);
+        return title_div;
+    }
+
+
     //draw_av_page()
     //____________________________________________________________________________________
     function draw_av_page(metadata, files, can_edit) {
@@ -192,15 +197,17 @@
         }
 
         var mediatype = metadata['mediatype'];
-        var title = metadata['title'];
-        if (undefined == title) title = 'Untitled';
-
         var nav_div = make_nav_div(metadata);
+        var title_div = make_title_div(metadata);
 
-        var title_div = $('<div id="ia_title_div"/>').text(title);
         var ia_player_div = $('<div id="ia_player_div"/>');
         var ia_div = $('<div id="ia_enhancer"/>');
-        var meta_div = $('<div id="ia_meta_div"></div>');
+
+        var meta_div = make_meta_div(metadata, can_edit);
+        ia_div.append(meta_div);
+
+        var files_div = make_files_div(files, metadata['identifier'], can_edit);
+        ia_div.append(files_div);
 
 
         if ('audio' == mediatype) {
@@ -209,7 +216,6 @@
 
         $('body').empty().append(nav_div).append(title_div).append(ia_player_div).append(ia_div);
         ia_player_div.append(av_embed);
-        ia_div.append(meta_div);
         av_embed.on('resize', '#avplaydiv', function() {alert('resize');});
 
         var description = metadata['description'];
@@ -219,13 +225,27 @@
             ia_player_div.append(desc_div);
         }
 
-        append_metadata(metadata, meta_div, can_edit);
+    }
 
-        var files_div = $('<div id="ia_files_div"></div>');
+
+    //draw_texts_page()
+    //____________________________________________________________________________________
+    function draw_texts_page(metadata, files, can_edit) {
+        var nav_div = make_nav_div(metadata);
+        var title_div = make_title_div(metadata);
+
+        var ia_div = $('<div id="ia_enhancer"/>');
+        var meta_div = make_meta_div(metadata, can_edit);
+        ia_div.append(meta_div);
+
+        var files_div = make_files_div(files, metadata['identifier'], can_edit);
         ia_div.append(files_div);
 
-        append_files(files, files_div, metadata['identifier'], can_edit);
+        $('body').empty().append(nav_div).append(title_div).append(ia_div);
+
+
     }
+
 
     //____________________________________________________________________________________
     $.get('/metadata/'+identifier, function(data) {
@@ -242,6 +262,8 @@
 
         if (('movies' == mediatype) || ('audio' == mediatype)){
             draw_av_page(metadata, files, can_edit);
+        } else if ('texts' == mediatype) {
+            draw_texts_page(metadata, files, can_edit);
         }
     });
 })();

@@ -27,13 +27,17 @@
                             'scanner', 'sponsor', 'sponsordate',
                             'type', 'updatedate', 'updater', 'uploader'];
 
+        var interesting_metadata = ['creator', 'credits', 'contributor', 'date', 'language',
+            'notes', 'publisher', 'shotlist', 'sponsor', 'subject',
+        ];
+
         var toplevel_metadata = ['title', 'description'];
 
         var keys = Object.keys(metadata);
         keys.sort();
 
         $.each(keys, function(i, key) {
-            if (-1 !== $.inArray(key, system_metadata))   return true; //continue
+            if (-1 === $.inArray(key, interesting_metadata))   return true; //continue
             if (-1 !== $.inArray(key, toplevel_metadata)) return true; //continue
 
             if ("object" === typeof(metadata[key])) return true; //for now
@@ -45,7 +49,7 @@
         });
 
         $.each(keys, function(i, key) {
-            if (-1 === $.inArray(key, system_metadata))   return true; //continue
+            if (-1 !== $.inArray(key, interesting_metadata))   return true; //continue
             if (-1 !== $.inArray(key, toplevel_metadata)) return true; //continue
 
             if ("object" === typeof(metadata[key])) return true; //for now
@@ -189,11 +193,17 @@
 
     // make_book_div()
     //____________________________________________________________________________________
-    function make_book_div(metadata) {
+    function make_book_div(metadata, read_links) {
         var identifier = metadata['identifier'];
         var book_div = $('<div id="ia_book"/>');
-        var embed_div = $("<iframe id='bookreader_embed' onload='$(\"#bookreader_embed\")[0].contentWindow.jQuery(\"#BRnavCntlBtm\").click();' src='https://archive.org/stream/"+identifier+"#mode/2up' width='100%' height='430px' frameborder='0' ></iframe>");
-        book_div.append(embed_div);
+
+        if(read_links.length > 0) {
+            var stream_link = read_links.attr('href');
+            if (/^\/stream\//.test(stream_link)) {
+                var embed_div = $("<iframe id='bookreader_embed' onload='$(\"#bookreader_embed\")[0].contentWindow.jQuery(\"#BRnavCntlBtm\").click();' src='"+stream_link+"#mode/2up' width='100%' height='430px' frameborder='0' ></iframe>");
+                book_div.append(embed_div);
+            }
+        }
 
         var description = metadata['description'];
         if (undefined != description) {
@@ -249,7 +259,7 @@
 
     //draw_texts_page()
     //____________________________________________________________________________________
-    function draw_texts_page(metadata, files, can_edit) {
+    function draw_texts_page(metadata, files, read_links, can_edit) {
         var nav_div = make_nav_div(metadata);
         var title_div = make_title_div(metadata);
 
@@ -260,7 +270,7 @@
         var files_div = make_files_div(files, metadata['identifier'], can_edit);
         ia_div.append(files_div);
 
-        var book_div = make_book_div(metadata);
+        var book_div = make_book_div(metadata, read_links);
 
         $('body').empty().append(nav_div).append(title_div).append(book_div)
 
@@ -286,7 +296,8 @@
         if (('movies' == mediatype) || ('audio' == mediatype)){
             draw_av_page(metadata, files, can_edit);
         } else if ('texts' == mediatype) {
-            draw_texts_page(metadata, files, can_edit);
+            var read_links = $('#dl a').filter(':contains("Read Online")');
+            draw_texts_page(metadata, files, read_links, can_edit);
         }
     });
 })();

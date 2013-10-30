@@ -42,9 +42,14 @@
 
             if ("object" === typeof(metadata[key])) return true; //for now
 
+
             var row_div = $('<div/>').addClass('ia_meta_row');
             var key_div = $('<div/>').addClass('ia_meta_key').text(key);
-            var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
+            if ('notes' === key) {
+                var val_div = $('<div/>').addClass('ia_meta_val').html(metadata[key].replace(/\n/g, '<br/>\n'));
+            } else {
+                var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
+            }
             meta_div.append(row_div.append(key_div).append(val_div));
         });
 
@@ -91,7 +96,7 @@
                     type = file.name;
                 }
                 var link = $('<a/>').attr('href', '/download/'+identifier + '/' + file.name).text(type);
-                dl_files.append($('<span/>').addClass('dl_file').append(link));
+                dl_files.append($('<span/>').addClass('dl_file').append(link)).append(' ');
             }
         });
 
@@ -172,6 +177,7 @@
         }
 
         $.each(collections.reverse(), function(i, collection) {
+            if (collection == mediatype) return true; //etree items
             link = $('<a/>').attr('href', '/details/'+collection).text(collection);
             nav_div.append(' &#10095; ').append(link);
         });
@@ -239,7 +245,7 @@
         ia_div.append(files_div);
 
 
-        if ('audio' == mediatype) {
+        if ('movies' !== mediatype) {
             $('#avplaydiv').addClass('ia_audio');
         }
 
@@ -294,7 +300,7 @@
             can_edit = true;
         }
 
-        if (('movies' == mediatype) || ('audio' == mediatype)){
+        if (-1 !== $.inArray(mediatype, ['movies', 'audio', 'etree'])) {
             draw_av_page(metadata, files, can_edit);
         } else if ('texts' == mediatype) {
             var read_links = $('#dl a').filter(':contains("Read Online")');

@@ -117,11 +117,16 @@
 }
 
 .dl_group {
-    padding: 10px;
+    padding: 5px;
 }
 
 .dl_orig {
     padding: 2px;
+    margin-bottom: 2px;
+}
+
+.dl_files {
+    line-height: 2em;
 }
 
 .dl_file {

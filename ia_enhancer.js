@@ -249,6 +249,7 @@
 
         var description = metadata['description'];
         if (undefined != description) {
+            description = description.replace(/\n/g, '<br/>\n');
             var desc_div = $('<div/>').addClass('ia_description').html(description);
             //meta_div.append(desc_div);
             ia_player_div.append(desc_div);

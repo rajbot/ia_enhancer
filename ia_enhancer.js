@@ -245,6 +245,9 @@
             description = '';
         }
 
+        if ('string' !== typeof(description)) {
+            description = description.join('\n\n');
+        }
         description = description.replace(/\n/g, '<br/>\n');
         var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').html(description);
         desc_div.append($('<div/>').addClass('ia_reddit_links'));

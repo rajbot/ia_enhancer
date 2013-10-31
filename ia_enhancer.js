@@ -114,14 +114,17 @@
         var all_files = append_dl_files_group(dl_div, 'All Files');
         var dir = data['dir'];
         if ('d1' in data) {
-            var link = $('<a/>').attr('href', 'https://'+data['d1']+dir).text('Primary');
+            link = $('<a/>').attr('href', 'https://'+data['d1']+dir).text('Primary');
             all_files.append($('<span/>').addClass('dl_file').append(link));
         }
         if ('d2' in data) {
-            var link = $('<a/>').attr('href', 'https://'+data['d2']+dir).text('Secondary');
+            link = $('<a/>').attr('href', 'https://'+data['d2']+dir).text('Secondary');
             all_files.append($('<span/>').addClass('dl_file').append(link));
         }
-
+        if (can_edit) {
+            link = $('<a/>').attr('href', 'https://archive.org/upload?identifier='+identifier).text('Add file to this item');
+            all_files.append($('<span/>').addClass('dl_file').append(link));
+        }
     }
 
 

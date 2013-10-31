@@ -76,8 +76,7 @@
 }
 
 #ia_meta_div {
-    /*float:      left;*/
-    width:      500px;
+    width:      600px;
     padding:    10px;
     display:    table-cell;
     border-right: 1px solid black;

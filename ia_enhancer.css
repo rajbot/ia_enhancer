@@ -101,13 +101,13 @@
     display: table-cell;
     /*float: left;*/
     color: #999;
-    overflow: scroll;
+    /*overflow: scroll;*/
     /*white-space: nowrap;*/
 }
 
 .ia_meta_val {
     display: table-cell;
-    overflow: scroll;
+    /*overflow: scroll;*/
 }
 
 

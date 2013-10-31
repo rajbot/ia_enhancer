@@ -134,6 +134,15 @@
         var identifier = metadata['identifier'];
         var files_div = $('<div id="ia_files_div"></div>');
 
+        var collections = get_collections(metadata);
+        if (-1 !== $.inArray('stream_only', collections)) {
+            if (!can_edit) {
+                return;
+            } else {
+                files_div.append('<div>This item is available in streaming format. Admin view of files:</div>');
+            }
+        }
+
         var downloads = {};
         $.each(files, function(i, file) {
             if ('Thumbnail' == file.format) return true; //continue
@@ -180,6 +189,16 @@
     }
 
 
+    // get_collections
+    //____________________________________________________________________________________
+    function get_collections(metadata) {
+        var collections = metadata['collection'];
+        if ("string" == typeof(collections)) {
+            collections = [collections];
+        }
+        return collections;
+    }
+
     // make_nav_div()
     //____________________________________________________________________________________
     function make_nav_div(metadata) {
@@ -191,10 +210,7 @@
         link = $('<a/>').attr('href', '/details/'+mediatype).text(mediatype);
         nav_div.append(link);
 
-        var collections = metadata['collection'];
-        if ("string" == typeof(collections)) {
-            collections = [collections];
-        }
+        var collections = get_collections(metadata);
 
         $.each(collections.reverse(), function(i, collection) {
             if (collection == mediatype) return true; //etree items
@@ -226,7 +242,7 @@
             description = '';
         }
 
-        description += '<script type="text/javascript" src="https://pay.reddit.com/static/button/button1.js"></script>';
+        description = description.replace(/\n/g, '<br/>\n');
         var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').html(description);
         desc_div.append($('<div/>').addClass('ia_reddit_links'));
 

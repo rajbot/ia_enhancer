@@ -45,8 +45,8 @@
 
             var row_div = $('<div/>').addClass('ia_meta_row');
             var key_div = $('<div/>').addClass('ia_meta_key').text(key);
-            if ('notes' === key) {
-                var val_div = $('<div/>').addClass('ia_meta_val').html(metadata[key].replace(/\n/g, '<br/>\n'));
+            if (-1 !== $.inArray(key, ['notes', 'shotlist'])) {
+                var val_div = $('<div/>').addClass('ia_meta_val').html(metadata[key].trim().replace(/\n/g, '<br/>\n'));
             } else {
                 var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
             }

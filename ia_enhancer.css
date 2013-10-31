@@ -158,3 +158,23 @@
 #ia_book {
     text-align: center;
 }
+
+.ia_reddit_link {
+    margin: 5px;
+    border: 1px solid black;
+    float: left;
+    padding: 5px 5px 5px 25px;
+    background-repeat: no-repeat;
+    background-image: url('http://www.redditstatic.com/spreddit5.gif');
+    background-position: left center;
+}
+
+.ia_reddit_link a:link {
+    text-decoration: none;
+    color: #000;
+}
+
+.ia_reddit_link a:visited {
+    text-decoration: none;
+    color: #000;
+}

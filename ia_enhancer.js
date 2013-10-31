@@ -68,15 +68,23 @@
         return meta_div;
     }
 
+    // append_dl_files_group
+    //____________________________________________________________________________________
+    function append_dl_files_group(div, name) {
+        var dl_group = $('<div/>').addClass('dl_group');
+        div.append(dl_group);
+        dl_group.append($('<div/>').addClass('dl_orig').text(name));
+        var dl_files = $('<div/>').addClass('dl_files');
+        dl_group.append(dl_files);
+        return dl_files;
+    }
+
 
     // append_metafiles()
     //____________________________________________________________________________________
-    function append_metafiles(av_div, files, identifier, can_edit) {
-        var dl_group = $('<div/>').addClass('dl_group');
-        av_div.append(dl_group);
-        dl_group.append($('<div/>').addClass('dl_orig').text('Metadata'));
-        var dl_files = $('<div/>').addClass('dl_files');
-        dl_group.append(dl_files);
+    function append_metafiles(dl_div, data, identifier, can_edit) {
+        var files = data['files'];
+        var dl_files = append_dl_files_group(dl_div, 'Metadata');
 
         if (can_edit) {
             var link = $('<a/>').attr('href', '/history/'+identifier).text('History');
@@ -102,12 +110,28 @@
 
         var link = $('<a/>').attr('href', '/metadata/'+identifier).text('JSON');
         dl_files.append($('<span/>').addClass('dl_file').append(link));
+
+        var all_files = append_dl_files_group(dl_div, 'All Files');
+        var dir = data['dir'];
+        if ('d1' in data) {
+            var link = $('<a/>').attr('href', 'https://'+data['d1']+dir).text('Primary');
+            all_files.append($('<span/>').addClass('dl_file').append(link));
+        }
+        if ('d2' in data) {
+            var link = $('<a/>').attr('href', 'https://'+data['d2']+dir).text('Secondary');
+            all_files.append($('<span/>').addClass('dl_file').append(link));
+        }
+
     }
 
 
     // make_files_div()
     //____________________________________________________________________________________
-    function make_files_div(files, identifier, can_edit) {
+    function make_files_div(data, can_edit) {
+        var files    = data['files'];
+        var metadata = data['metadata'];
+
+        var identifier = metadata['identifier'];
         var files_div = $('<div id="ia_files_div"></div>');
 
         var downloads = {};
@@ -134,17 +158,13 @@
         var dl_div = $('<div/>').addClass('ia_downloads');
         files_div.append(dl_div);
 
-        append_metafiles(dl_div, files, identifier, can_edit);
+        append_metafiles(dl_div, data, identifier, can_edit);
 
         var keys = Object.keys(downloads);
         keys.sort();
 
         $.each(keys, function(i, key) {
-            var dl_group = $('<div/>').addClass('dl_group');
-            dl_div.append(dl_group);
-            dl_group.append($('<div/>').addClass('dl_orig').text(key));
-            var dl_files = $('<div/>').addClass('dl_files');
-            dl_group.append(dl_files);
+            var dl_files = append_dl_files_group(dl_div, key);
 
             $.each(downloads[key], function(i, file) {
                 var link = $('<a/>').attr('href', '/download/'+identifier + '/' + file.name).text(file.format);
@@ -197,6 +217,38 @@
     }
 
 
+    // make_description_div()
+    //____________________________________________________________________________________
+    function make_description_div(metadata, cls) {
+        var identifier = metadata['identifier'];
+        var description = metadata['description'];
+        if (undefined === description) {
+            description = '';
+        }
+
+        description += '<script type="text/javascript" src="https://pay.reddit.com/static/button/button1.js"></script>';
+        var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').html(description);
+        desc_div.append($('<div/>').addClass('ia_reddit_links'));
+
+        var script = document.createElement('script');
+        script.textContent = 'function ia_reddit_callback(obj) {$.each(obj["data"]["children"], function (i, key) {$(".ia_reddit_links").append("<div class=\'ia_reddit_link\'><a href=\'http://reddit.com"+key["data"]["permalink"]+"\'>"+key["data"]["score"] + " points</a></div>");});}';
+        document.head.appendChild(script);
+
+        //Check for both http and https links
+        $.ajax({
+            url: 'https://pay.reddit.com/api/info.json?url='+encodeURIComponent('https://archive.org/details/'+identifier)+'&jsonp=ia_reddit_callback',
+            dataType: 'jsonp',
+        });
+
+        $.ajax({
+            url: 'https://pay.reddit.com/api/info.json?url='+encodeURIComponent('http://archive.org/details/'+identifier)+'&jsonp=ia_reddit_callback',
+            dataType: 'jsonp',
+        });
+
+        return desc_div;
+    }
+
+
     // make_book_div()
     //____________________________________________________________________________________
     function make_book_div(metadata, read_links) {
@@ -211,12 +263,8 @@
             }
         }
 
-        var description = metadata['description'];
-        if (undefined != description) {
-            var desc_div = $('<div/>').addClass('ia_book_description').html(description);
-            //meta_div.append(desc_div);
-            book_div.append(desc_div);
-        }
+        var desc_div = make_description_div(metadata, 'ia_book_description');
+        book_div.append(desc_div);
 
         return book_div;
     }
@@ -224,7 +272,10 @@
 
     //draw_av_page()
     //____________________________________________________________________________________
-    function draw_av_page(metadata, files, can_edit) {
+    function draw_av_page(data, can_edit) {
+        var metadata = data['metadata'];
+        var files    = data['files'];
+
         var av_embed = $('#avplaycontainer');
         if (0 == av_embed.length) {
             console.log('could not find avplayer!');
@@ -241,7 +292,7 @@
         var meta_div = make_meta_div(metadata, can_edit);
         ia_div.append(meta_div);
 
-        var files_div = make_files_div(files, metadata['identifier'], can_edit);
+        var files_div = make_files_div(data, can_edit);
         ia_div.append(files_div);
 
 
@@ -253,6 +304,9 @@
         ia_player_div.append(av_embed);
         av_embed.on('resize', '#avplaydiv', function() {alert('resize');});
 
+        var desc_div = make_description_div(metadata, 'ia_description');
+        ia_player_div.append(desc_div);
+        /*
         var description = metadata['description'];
         if (undefined != description) {
             description = description.replace(/\n/g, '<br/>\n');
@@ -260,13 +314,17 @@
             //meta_div.append(desc_div);
             ia_player_div.append(desc_div);
         }
+        */
 
     }
 
 
     //draw_texts_page()
     //____________________________________________________________________________________
-    function draw_texts_page(metadata, files, read_links, can_edit) {
+    function draw_texts_page(data, read_links, can_edit) {
+        var metadata = data['metadata'];
+        var files    = data['files'];
+
         var nav_div = make_nav_div(metadata);
         var title_div = make_title_div(metadata);
 
@@ -274,7 +332,7 @@
         var meta_div = make_meta_div(metadata, can_edit);
         ia_div.append(meta_div);
 
-        var files_div = make_files_div(files, metadata['identifier'], can_edit);
+        var files_div = make_files_div(data, can_edit);
         ia_div.append(files_div);
 
         var book_div = make_book_div(metadata, read_links);
@@ -292,7 +350,6 @@
         //$('body').empty();
 
         var metadata  = data['metadata'];
-        var files     = data['files'];
         var mediatype = metadata['mediatype'];
 
         var can_edit = false;
@@ -301,10 +358,10 @@
         }
 
         if (-1 !== $.inArray(mediatype, ['movies', 'audio', 'etree'])) {
-            draw_av_page(metadata, files, can_edit);
+            draw_av_page(data, can_edit);
         } else if ('texts' == mediatype) {
             var read_links = $('#dl a').filter(':contains("Read Online")');
-            draw_texts_page(metadata, files, read_links, can_edit);
+            draw_texts_page(data, read_links, can_edit);
         }
     });
 })();

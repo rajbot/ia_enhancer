@@ -97,7 +97,9 @@
                 if (/_meta.xml$/.test(file.name)) {
                     type = 'meta.xml';
                 } else if (/_files.xml$/.test(file.name)) {
-                    type = 'files.xml'
+                    type = 'files.xml';
+                } else if (/_meta.sqlite$/.test(file.name)) {
+                    type = 'S3 sqlite';
                 } else if (/_reviews.xml$/.test(file.name)) {
                     return true; //continue
                 } else {

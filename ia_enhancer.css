@@ -158,6 +158,28 @@
     text-align: center;
 }
 
+#ia_screenshot {
+    text-align: center;
+}
+
+#ia_screenshot img {
+    margin-bottom: 5px;
+}
+
+#ia_screenshot a:link, #ia_screenshot a:visited {
+    text-decoration: none;
+    color: #fff;
+    padding: 2px 5px;
+    margin: 5px;
+    background-color: #666;
+    border: 1px solid #000;
+    white-space: nowrap;
+}
+
+#ia_screenshot a:hover {
+    background-color: #888;
+}
+
 .ia_reddit_link {
     margin: 5px;
     border: 1px solid black;

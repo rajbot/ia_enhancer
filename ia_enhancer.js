@@ -292,6 +292,27 @@
     }
 
 
+    // make_screenshot_div()
+    //____________________________________________________________________________________
+    function make_screenshot_div(metadata, files, emulator_link) {
+        var img = null;
+        $.each(files, function(i, key) {
+            if ('Emulator Screenshot' == key['format']) {
+                img = key['name'];
+                console.log(img);
+                return false; //break
+            }
+        });
+        if (null == img) return null;
+
+        var screenshot_div = $('<div id="ia_screenshot"/>');
+        var link = '/serve/'+metadata['identifier']+'/'+img;
+        screenshot_div.append($('<img/>').attr('src', link));
+        screenshot_div.append($('<a/>').attr('href', emulator_link).text('Run Program'));
+        return screenshot_div;
+    }
+
+
     //draw_av_page()
     //____________________________________________________________________________________
     function draw_av_page(data, can_edit) {
@@ -324,19 +345,9 @@
 
         $('body').empty().append(nav_div).append(title_div).append(ia_player_div).append(ia_div);
         ia_player_div.append(av_embed);
-        av_embed.on('resize', '#avplaydiv', function() {alert('resize');});
 
         var desc_div = make_description_div(metadata, 'ia_description');
         ia_player_div.append(desc_div);
-        /*
-        var description = metadata['description'];
-        if (undefined != description) {
-            description = description.replace(/\n/g, '<br/>\n');
-            var desc_div = $('<div/>').addClass('ia_description').html(description);
-            //meta_div.append(desc_div);
-            ia_player_div.append(desc_div);
-        }
-        */
 
     }
 
@@ -362,8 +373,36 @@
         $('body').empty().append(nav_div).append(title_div).append(book_div)
 
         $('body').append(ia_div);
+    }
 
 
+    //draw_software_page()
+    //____________________________________________________________________________________
+    function draw_software_page(data, emulator_link, can_edit) {
+        var metadata = data['metadata'];
+        var files    = data['files'];
+
+        var nav_div = make_nav_div(metadata);
+        var title_div = make_title_div(metadata);
+
+        var ia_div = $('<div id="ia_enhancer"/>');
+        var meta_div = make_meta_div(metadata, can_edit);
+        ia_div.append(meta_div);
+
+        var files_div = make_files_div(data, can_edit);
+        ia_div.append(files_div);
+
+        var ia_player_div = $('<div id="ia_player_div"/>');
+
+        var screenshot_div = make_screenshot_div(metadata, files, emulator_link);
+        ia_player_div.append(screenshot_div);
+
+        var desc_div = make_description_div(metadata, 'ia_description');
+        ia_player_div.append(desc_div);
+
+        $('body').empty().append(nav_div).append(title_div).append(ia_player_div);
+
+        $('body').append(ia_div);
     }
 
 
@@ -384,6 +423,9 @@
         } else if ('texts' == mediatype) {
             var read_links = $('#dl a').filter(':contains("Read Online")');
             draw_texts_page(data, read_links, can_edit);
+        } else if ('software' == mediatype) {
+            var emulator_link = $('#midcol>.box').find('a[href^="/stream"]').attr('href');
+            draw_software_page(data, emulator_link, can_edit);
         }
     });
 })();

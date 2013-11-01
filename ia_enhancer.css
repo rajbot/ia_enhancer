@@ -166,6 +166,8 @@
     background-repeat: no-repeat;
     background-image: url('http://www.redditstatic.com/spreddit5.gif');
     background-position: left center;
+    text-align: center;
+    font-size: 0.8em;
 }
 
 .ia_reddit_link a:link {

@@ -253,7 +253,7 @@
         desc_div.append($('<div/>').addClass('ia_reddit_links'));
 
         var script = document.createElement('script');
-        script.textContent = 'function ia_reddit_callback(obj) {$.each(obj["data"]["children"], function (i, key) {$(".ia_reddit_links").append("<div class=\'ia_reddit_link\'><a href=\'http://reddit.com"+key["data"]["permalink"]+"\'>"+key["data"]["score"] + " points</a></div>");});}';
+        script.textContent = 'function ia_reddit_callback(obj) {$.each(obj["data"]["children"], function (i, key) {$(".ia_reddit_links").append("<div class=\'ia_reddit_link\'><a href=\'http://reddit.com"+key["data"]["permalink"]+"\'><span>/r/"+key["data"]["subreddit"]+"</span> <span>"+key["data"]["score"] + " pts</span></a></div>");});}';
         document.head.appendChild(script);
 
         //Check for both http and https links

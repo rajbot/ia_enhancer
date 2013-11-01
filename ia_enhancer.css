@@ -166,7 +166,7 @@
     margin-bottom: 5px;
 }
 
-#ia_screenshot a:link, #ia_screenshot a:visited {
+.ia_software_link:link, .ia_software_link:visited {
     text-decoration: none;
     color: #000;
     padding: 2px 5px;
@@ -176,7 +176,7 @@
     white-space: nowrap;
 }
 
-#ia_screenshot a:hover {
+.ia_software_link:hover {
     background-color: #ccc;
 }
 

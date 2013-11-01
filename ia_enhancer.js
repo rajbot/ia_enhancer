@@ -308,9 +308,11 @@
         if (null == img) return null;
 
         var screenshot_div = $('<div id="ia_screenshot"/>');
-        var link = '/serve/'+metadata['identifier']+'/'+img;
-        screenshot_div.append($('<img/>').attr('src', link));
-        screenshot_div.append($('<a/>').attr('href', emulator_link).text('Run Program'));
+        var img_url = '/serve/'+metadata['identifier']+'/'+img;
+        var img_link = $('<a/>').attr('href', emulator_link);
+        screenshot_div.append(img_link.append($('<img/>').attr('src', img_url)));
+        var link = $('<a/>').attr('href', emulator_link).addClass('ia_software_link');
+        screenshot_div.append(link.text('Run Program'));
         return screenshot_div;
     }
 

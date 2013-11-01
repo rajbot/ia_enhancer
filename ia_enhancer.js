@@ -27,8 +27,9 @@
                             'scanner', 'sponsor', 'sponsordate',
                             'type', 'updatedate', 'updater', 'uploader'];
 
-        var interesting_metadata = ['creator', 'credits', 'contributor', 'date', 'language',
-            'notes', 'publisher', 'shotlist', 'sponsor', 'subject',
+        var interesting_metadata = ['creator', 'credits', 'contributor', 'date',
+            'emulator_instructions', 'language', 'notes', 'publisher', 'shotlist',
+            'sponsor', 'subject',
         ];
 
         var toplevel_metadata = ['title', 'description'];
@@ -45,7 +46,7 @@
 
             var row_div = $('<div/>').addClass('ia_meta_row');
             var key_div = $('<div/>').addClass('ia_meta_key').text(key);
-            if (-1 !== $.inArray(key, ['notes', 'shotlist'])) {
+            if (-1 !== $.inArray(key, ['notes', 'shotlist', 'emulator_instructions'])) {
                 var val_div = $('<div/>').addClass('ia_meta_val').html(metadata[key].trim().replace(/\n/g, '<br/>\n'));
             } else {
                 var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);

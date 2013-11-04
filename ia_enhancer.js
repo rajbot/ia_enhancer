@@ -1,6 +1,4 @@
 (function() {
-    //alert('foo!');
-
     var path = document.location.pathname.split('/');
     if (3 != path.length) {
         alert('could not find archive.org identifier');
@@ -12,10 +10,76 @@
     console.log('got id:', identifier)
 
 
+    //add_click_handler()
+    //____________________________________________________________________________________
+    function add_click_handler(elements) {
+        //add click handler
+        elements.click(function() {
+            console.log(this);
+            if ($(this).hasClass('ia_modify')) {
+                return;
+            } else {
+                $(this).addClass('ia_modify');
+            }
+
+            var element = $(this);
+            var parent  = element.parent();
+            var val_div = parent.find('.ia_meta_val');
+            if (1 !== val_div.length) {
+                alert('Could not find metadata to edit');
+                return;
+            }
+
+            var prev_val = val_div.html();
+
+            var input = $('<input type="text" />').addClass('ia_edit_input').val(prev_val);
+
+            var save_button   = $('<button type="button">Save</button>').click(function() {
+                var name = parent.find('.ia_meta_key').text();
+                var new_val = input.val();
+
+                val_div.empty().text(new_val);
+                if (new_val == prev_val) return;
+
+                var path = document.location.pathname.split('/');
+                if (3 != path.length) {
+                    alert('could not find archive.org identifier');
+                    return;
+                }
+                var identifier = path[2];
+                var data =  {"replace": "/"+name, "value": new_val};
+                $.getJSON('/metadata/'+identifier, {"-patch": data, "-target":"metadata"},
+                    function(obj) {
+                        console.log('metadata write api returned');
+                        console.log(obj);
+                        if (false == obj.success) {
+                            alert('Could not save title due to an error: ' + obj.error);
+                            val_div.text(prev_val);
+                        } else {
+                            element.removeClass('ia_modify');
+                        }
+                    }
+                );
+            });
+
+            var cancel_button = $('<button type="reset">Cancel</button>').click(function() {
+                val_div.empty().text(prev_val);
+                element.removeClass('ia_modify');
+                return false; //stop propagation
+            });
+
+            val_div.empty().append(input, save_button, cancel_button);
+
+        });
+    }
+
+
     //make_meta_div()
     //____________________________________________________________________________________
     function make_meta_div(metadata, can_edit) {
         var meta_div = $('<div id="ia_meta_div"></div>');
+        var meta_table = $('<div id="ia_meta_table"/>');
+        meta_div.append(meta_table);
 
         var system_metadata = ['addeddate', 'call_number', 'camera', 'collection',
                             'collectionid', 'contributor', 'curation',
@@ -37,6 +101,8 @@
         var keys = Object.keys(metadata);
         keys.sort();
 
+        var edit_buttons = $();
+
         $.each(keys, function(i, key) {
             if (-1 === $.inArray(key, interesting_metadata))   return true; //continue
             if (-1 !== $.inArray(key, toplevel_metadata)) return true; //continue
@@ -51,7 +117,15 @@
             } else {
                 var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
             }
-            meta_div.append(row_div.append(key_div).append(val_div));
+
+            if (can_edit) {
+                var edit_div = $('<div/>').addClass('ia_edit_button').html('&#9998;');
+                edit_buttons = edit_buttons.add(edit_div);
+            } else {
+                var edit_div = $('<div/>').addClass('ia_edit_button');
+            }
+
+            meta_table.append(row_div.append(key_div).append(val_div).append(edit_div));
         });
 
         $.each(keys, function(i, key) {
@@ -63,8 +137,13 @@
             var row_div = $('<div/>').addClass('ia_meta_row');
             var key_div = $('<div/>').addClass('ia_meta_key').text(key);
             var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
-            meta_div.append(row_div.append(key_div).append(val_div));
+
+            var edit_div = $('<div/>').addClass('ia_edit_button');
+
+            meta_table.append(row_div.append(key_div).append(val_div).append(edit_div));
         });
+
+        add_click_handler(edit_buttons);
 
         return meta_div;
     }

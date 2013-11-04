@@ -83,11 +83,14 @@
 }
 
 
+#ia_meta_table {
+    display: table;
+}
 
 .ia_meta_row {
     padding: 4px;
     font-size: 1.1em;
-    display: table;
+    display: table-row;
     width: 100%;
 }
 
@@ -97,7 +100,9 @@
 
 .ia_meta_key {
     width: 100px;
-    margin-right: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     display: table-cell;
     /*float: left;*/
     color: #999;
@@ -107,9 +112,22 @@
 
 .ia_meta_val {
     display: table-cell;
+    width: 100%;
     /*overflow: scroll;*/
 }
 
+.ia_edit_button {
+    margin-left: 3px;
+    color: #999;
+}
+
+.ia_edit_button:hover {
+    color: #000;
+}
+
+.ia_edit_input {
+    width: calc(100% - 10px);
+}
 
 #ia_files_div {
     display: table-cell;

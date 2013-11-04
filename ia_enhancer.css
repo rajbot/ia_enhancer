@@ -132,7 +132,7 @@
     padding: 2px 5px;
     margin: 5px;
     background-color: #fff;
-    border: 1px dotted #000;
+    border: 1px solid #ccc;
     white-space: nowrap;
 }
 

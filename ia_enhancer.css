@@ -131,27 +131,27 @@
 .dl_file {
     padding: 2px 5px;
     margin: 5px;
-    background-color: #666;
-    border: 2px solid #666;
+    background-color: #fff;
+    border: 1px dotted #000;
     white-space: nowrap;
 }
 
 .ia_original {
-    border: 2px solid #000;
+    border: 1px solid #000;
 }
 
 .dl_file:hover {
-    background-color: #888;
+    background-color: #ccc;
 }
 
 .dl_file a:link {
     text-decoration: none;
-    color: #fff;
+    color: #000;
 }
 
 .dl_file a:visited {
     text-decoration: none;
-    color: #eee;
+    color: #333;
 }
 
 #ia_book {

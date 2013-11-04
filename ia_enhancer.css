@@ -35,6 +35,19 @@
     margin-bottom: 15px;
 }
 
+#ia_title {
+    float: left;
+    margin-right: 5px;
+}
+
+.ia_title_edit_button {
+    color: #ccc;
+}
+
+.ia_title_edit_button:hover {
+    color: #fff;
+}
+
 #ia_player_div {
     display: table;
 }

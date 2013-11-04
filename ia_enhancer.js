@@ -13,7 +13,6 @@
     //add_click_handler()
     //____________________________________________________________________________________
     function add_click_handler(elements) {
-        //add click handler
         elements.click(function() {
             console.log(this);
             if ($(this).hasClass('ia_modify')) {
@@ -23,8 +22,16 @@
             }
 
             var element = $(this);
-            var parent  = element.parent();
-            var val_div = parent.find('.ia_meta_val');
+
+            var name = element.attr('ia_ajaxify');
+            if (undefined === name) {
+                var parent  = element.parent();
+                name = parent.find('.ia_meta_key').text();
+                var val_div = parent.find('.ia_meta_val');
+            } else {
+                var val_div = $('#ia_'+name);
+            }
+
             if (1 !== val_div.length) {
                 alert('Could not find metadata to edit');
                 return;
@@ -35,7 +42,6 @@
             var input = $('<input type="text" />').addClass('ia_edit_input').val(prev_val);
 
             var save_button   = $('<button type="button">Save</button>').click(function() {
-                var name = parent.find('.ia_meta_key').text();
                 var new_val = input.val();
 
                 val_div.empty().text(new_val);
@@ -313,7 +319,15 @@
         var title = metadata['title'];
         if (undefined == title) title = 'Untitled';
 
-        var title_div = $('<div id="ia_title_div"/>').text(title);
+        var ia_title = $('<div id="ia_title"/>').text(title);
+        var title_div = $('<div id="ia_title_div"/>').append(ia_title);
+
+        var edit_div = $('<div/>').addClass('ia_title_edit_button').html('&#9998;');
+        edit_div.attr('ia_ajaxify', 'title');
+        add_click_handler(edit_div);
+
+        title_div.append(edit_div);
+
         return title_div;
     }
 

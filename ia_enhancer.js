@@ -335,16 +335,18 @@
 
     // make_title_div()
     //____________________________________________________________________________________
-    function make_title_div(metadata) {
+    function make_title_div(metadata, can_edit) {
         var title = metadata['title'];
         if (undefined == title) title = 'Untitled';
 
         var ia_title = $('<span id="ia_title"/>').text(title);
         var title_div = $('<div id="ia_title_div"/>').append(ia_title);
 
-        var edit_div = $('<span/>').addClass('ia_title_edit_button').html('&#9998;');
-        edit_div.attr('ia_ajaxify', 'title');
-        add_click_handler(edit_div);
+        if (can_edit) {
+            var edit_div = $('<span/>').addClass('ia_title_edit_button').html('&#9998;');
+            edit_div.attr('ia_ajaxify', 'title');
+            add_click_handler(edit_div);
+        }
 
         title_div.append(edit_div);
 
@@ -354,7 +356,7 @@
 
     // make_description_div()
     //____________________________________________________________________________________
-    function make_description_div(metadata, cls) {
+    function make_description_div(metadata, cls, can_edit) {
         var identifier = metadata['identifier'];
         var description = metadata['description'];
         if (undefined === description) {
@@ -370,10 +372,12 @@
 
         var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').append(ia_description);
 
-        var edit_div = $('<span/>').addClass('ia_edit_button').html('&#9998;');
-        edit_div.attr('ia_ajaxify', 'description');
-        add_click_handler(edit_div);
-        desc_div.append(edit_div);
+        if (can_edit) {
+            var edit_div = $('<span/>').addClass('ia_edit_button').html('&#9998;');
+            edit_div.attr('ia_ajaxify', 'description');
+            add_click_handler(edit_div);
+            desc_div.append(edit_div);
+        }
 
         desc_div.append($('<div/>').addClass('ia_reddit_links'));
 
@@ -398,7 +402,7 @@
 
     // make_book_div()
     //____________________________________________________________________________________
-    function make_book_div(metadata, read_links) {
+    function make_book_div(metadata, read_links, can_edit) {
         var identifier = metadata['identifier'];
         var book_div = $('<div id="ia_book"/>');
 
@@ -410,7 +414,7 @@
             }
         }
 
-        var desc_div = make_description_div(metadata, 'ia_book_description');
+        var desc_div = make_description_div(metadata, 'ia_book_description', can_edit);
         book_div.append(desc_div);
 
         return book_div;
@@ -453,7 +457,7 @@
 
         var mediatype = metadata['mediatype'];
         var nav_div = make_nav_div(metadata);
-        var title_div = make_title_div(metadata);
+        var title_div = make_title_div(metadata, can_edit);
 
         var ia_player_div = $('<div id="ia_player_div"/>');
         var ia_div = $('<div id="ia_enhancer"/>');
@@ -472,7 +476,7 @@
         $('body').empty().append(nav_div).append(title_div).append(ia_player_div).append(ia_div);
         ia_player_div.append(av_embed);
 
-        var desc_div = make_description_div(metadata, 'ia_description');
+        var desc_div = make_description_div(metadata, 'ia_description', can_edit);
         ia_player_div.append(desc_div);
 
     }
@@ -485,7 +489,7 @@
         var files    = data['files'];
 
         var nav_div = make_nav_div(metadata);
-        var title_div = make_title_div(metadata);
+        var title_div = make_title_div(metadata, can_edit);
 
         var ia_div = $('<div id="ia_enhancer"/>');
         var meta_div = make_meta_div(metadata, can_edit);
@@ -494,7 +498,7 @@
         var files_div = make_files_div(data, can_edit);
         ia_div.append(files_div);
 
-        var book_div = make_book_div(metadata, read_links);
+        var book_div = make_book_div(metadata, read_links, can_edit);
 
         $('body').empty().append(nav_div).append(title_div).append(book_div)
 
@@ -509,7 +513,7 @@
         var files    = data['files'];
 
         var nav_div = make_nav_div(metadata);
-        var title_div = make_title_div(metadata);
+        var title_div = make_title_div(metadata, can_edit);
 
         var ia_div = $('<div id="ia_enhancer"/>');
         var meta_div = make_meta_div(metadata, can_edit);
@@ -523,7 +527,7 @@
         var screenshot_div = make_screenshot_div(metadata, files, emulator_link);
         ia_player_div.append(screenshot_div);
 
-        var desc_div = make_description_div(metadata, 'ia_description');
+        var desc_div = make_description_div(metadata, 'ia_description', can_edit);
         ia_player_div.append(desc_div);
 
         $('body').empty().append(nav_div).append(title_div).append(ia_player_div);

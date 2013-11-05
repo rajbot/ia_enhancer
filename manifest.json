@@ -1,6 +1,6 @@
 {
   "name": "Internet Archive Enhancer",
-  "version": "1.2",
+  "version": "2.5",
   "manifest_version": 2,
   "description": "Enhance archive.org with inline metadata editing and a black and white UI.",
   "content_scripts": [

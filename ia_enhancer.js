@@ -319,10 +319,10 @@
         var title = metadata['title'];
         if (undefined == title) title = 'Untitled';
 
-        var ia_title = $('<div id="ia_title"/>').text(title);
+        var ia_title = $('<span id="ia_title"/>').text(title);
         var title_div = $('<div id="ia_title_div"/>').append(ia_title);
 
-        var edit_div = $('<div/>').addClass('ia_title_edit_button').html('&#9998;');
+        var edit_div = $('<span/>').addClass('ia_title_edit_button').html('&#9998;');
         edit_div.attr('ia_ajaxify', 'title');
         add_click_handler(edit_div);
 
@@ -345,7 +345,8 @@
             description = description.join('\n\n');
         }
         description = description.replace(/\n/g, '<br/>\n');
-        var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').html(description);
+        var ia_description = $('<div id="ia_description"/>').html(description);
+        var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').append(ia_description);
         desc_div.append($('<div/>').addClass('ia_reddit_links'));
 
         var script = document.createElement('script');

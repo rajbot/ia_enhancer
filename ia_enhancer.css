@@ -139,6 +139,12 @@
     width: calc(100% - 10px);
 }
 
+.ia_edit_textarea {
+    width: calc(100% - 10px);
+    min-width: 500px;
+    min-height: 200px;
+}
+
 #ia_files_div {
     display: table-cell;
 }
@@ -188,6 +194,7 @@
 
 #ia_screenshot {
     text-align: center;
+    margin-bottom: 5px;
 }
 
 #ia_screenshot img {

@@ -7,14 +7,28 @@
 
 
     var identifier = path[2];
-    console.log('got id:', identifier)
+    console.log('ia_enhancer:', identifier);
+
+    var html_metadata_keys = ['description', 'notes', 'shotlist', 'emulator_instructions'];
+    var html_metadata = {};
+
+
+    //set_val()
+    //____________________________________________________________________________________
+    function set_val(element, key, val) {
+        if (-1 === $.inArray(key, html_metadata_keys)) {
+            element.text(val);
+        } else {
+            html_metadata[key] = val;
+            element.html(val.trim().replace(/\n/g, '<br/>\n'));
+        }
+    }
 
 
     //add_click_handler()
     //____________________________________________________________________________________
     function add_click_handler(elements) {
         elements.click(function() {
-            console.log(this);
             if ($(this).hasClass('ia_modify')) {
                 return;
             } else {
@@ -39,12 +53,21 @@
 
             var prev_val = val_div.html();
 
-            var input = $('<input type="text" />').addClass('ia_edit_input').val(prev_val);
+            if (-1 === $.inArray(name, html_metadata_keys)) {
+                var input = $('<input type="text" />').addClass('ia_edit_input').val(prev_val);
+            } else {
+                if (name in html_metadata) {
+                    prev_val = html_metadata[name];
+                }
+                var input = $('<textarea />').addClass('ia_edit_textarea').text(prev_val);
+            }
 
             var save_button   = $('<button type="button">Save</button>').click(function() {
                 var new_val = input.val();
 
-                val_div.empty().text(new_val);
+                val_div.empty();
+                set_val(val_div, name, new_val);
+
                 if (new_val == prev_val) return;
 
                 var path = document.location.pathname.split('/');
@@ -56,8 +79,8 @@
                 var data =  {"replace": "/"+name, "value": new_val};
                 $.getJSON('/metadata/'+identifier, {"-patch": data, "-target":"metadata"},
                     function(obj) {
-                        console.log('metadata write api returned');
-                        console.log(obj);
+                        //console.log('metadata write api returned');
+                        //console.log(obj);
                         if (false == obj.success) {
                             alert('Could not save title due to an error: ' + obj.error);
                             val_div.text(prev_val);
@@ -69,7 +92,7 @@
             });
 
             var cancel_button = $('<button type="reset">Cancel</button>').click(function() {
-                val_div.empty().text(prev_val);
+                set_val(val_div, name, prev_val);
                 element.removeClass('ia_modify');
                 return false; //stop propagation
             });
@@ -118,11 +141,8 @@
 
             var row_div = $('<div/>').addClass('ia_meta_row');
             var key_div = $('<div/>').addClass('ia_meta_key').text(key);
-            if (-1 !== $.inArray(key, ['notes', 'shotlist', 'emulator_instructions'])) {
-                var val_div = $('<div/>').addClass('ia_meta_val').html(metadata[key].trim().replace(/\n/g, '<br/>\n'));
-            } else {
-                var val_div = $('<div/>').addClass('ia_meta_val').text(metadata[key]);
-            }
+            var val_div = $('<div/>').addClass('ia_meta_val');
+            set_val(val_div, key, metadata[key]);
 
             if (can_edit) {
                 var edit_div = $('<div/>').addClass('ia_edit_button').html('&#9998;');
@@ -344,9 +364,17 @@
         if ('string' !== typeof(description)) {
             description = description.join('\n\n');
         }
-        description = description.replace(/\n/g, '<br/>\n');
-        var ia_description = $('<div id="ia_description"/>').html(description);
+
+        var ia_description = $('<span id="ia_description"/>');
+        set_val(ia_description, 'description', description);
+
         var desc_div = $('<div/>').addClass(cls).addClass('ia_desc').append(ia_description);
+
+        var edit_div = $('<span/>').addClass('ia_edit_button').html('&#9998;');
+        edit_div.attr('ia_ajaxify', 'description');
+        add_click_handler(edit_div);
+        desc_div.append(edit_div);
+
         desc_div.append($('<div/>').addClass('ia_reddit_links'));
 
         var script = document.createElement('script');
@@ -396,7 +424,6 @@
         $.each(files, function(i, key) {
             if ('Emulator Screenshot' == key['format']) {
                 img = key['name'];
-                console.log(img);
                 return false; //break
             }
         });
@@ -407,7 +434,7 @@
         var img_link = $('<a/>').attr('href', emulator_link);
         screenshot_div.append(img_link.append($('<img/>').attr('src', img_url)));
         var link = $('<a/>').attr('href', emulator_link).addClass('ia_software_link');
-        screenshot_div.append(link.text('Run Program'));
+        screenshot_div.append($('<div/>').append(link.text('Run Program')));
         return screenshot_div;
     }
 
@@ -420,7 +447,7 @@
 
         var av_embed = $('#avplaycontainer');
         if (0 == av_embed.length) {
-            console.log('could not find avplayer!');
+            console.log('ia_enhancer: could not find avplayer!');
             return;
         }
 
